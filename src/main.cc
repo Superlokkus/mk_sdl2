@@ -27,7 +27,7 @@ void init(void)
 {printf("\n%s",(char*)glGetString(GL_RENDERER));
 	printf("\n%s",(char*)glGetString( GL_VERSION));
 	printf("\n%s\n",(char*)glGetString( GL_SHADING_LANGUAGE_VERSION));
-	program = loadShaders("Programme/Dreiecke.vs", "Programme/Dreiecke.fs", "", "", "", "");
+	program = loadShaders("Dreiecke.vs", "Dreiecke.fs", "", "", "", "");
 	glUseProgram(program);
 	glGenBuffers(NumBuffers,Buffers);
 	glGenVertexArrays(NumVAOs,VAOs);
@@ -56,8 +56,8 @@ int main(int argc, char** argv)
 {glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA);
 	glutInitWindowSize(512,512);
-	glutInitContextVersion(4,5);  // (4,2) (3,3);
-	glutInitContextProfile(GLUT_CORE_PROFILE);
+    //glutInitContextVersion(4,5);  // (4,2) (3,3);
+	//glutInitContextProfile(GLUT_CORE_PROFILE);
 	//GLUT_COMPATIBILITY_PROFILE
 	glutCreateWindow(argv[0]);
 	glewExperimental=GL_TRUE;

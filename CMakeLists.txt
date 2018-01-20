@@ -14,12 +14,19 @@ include_directories(${OPENGL_INCLUDE_DIR})
 include_directories(${FreeImage_INCLUDE_DIRS})
 
 set (PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
+set (PROJECT_SHADER_DIR ${PROJECT_SOURCE_DIR}/shader)
+
+set (shader_files
+        Dreiecke.fs
+        Dreiecke.vs
+        )
 
 include_directories("${PROJECT_BINARY_DIR}")
 link_directories(${freeglut_STATIC_LIBRARY_DIRS})
 
-set (dist_vec_ret_lib_headers
-)
+foreach(resource ${shader_files})
+    configure_file(${PROJECT_SHADER_DIR}/${resource} ${resource} COPYONLY)
+endforeach()
 
 add_executable(triangle ${PROJECT_SOURCE_DIR}/main.cc ${PROJECT_SOURCE_DIR}/LoadShader.cpp)
 target_link_libraries(triangle ${GLEW_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${FreeImage_LIBRARIES})
