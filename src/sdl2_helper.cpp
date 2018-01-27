@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
+#include <functional>
+
 mk::sdl2_error::sdl2_error(const std::string &what) :
         runtime_error(what + " SDL:" + SDL_GetError()) {
     SDL_ClearError();
@@ -15,8 +17,10 @@ mk::sdl2_error::sdl2_error(const char *what) :
 }
 
 struct mk::sdl2_helper::impl {
-    SDL_Window *mainwindow{nullptr};
-    SDL_GLContext maincontext{};
+    std::unique_ptr<SDL_Window, std::function<void(SDL_Window *)>>
+            mainwindow{nullptr, [](SDL_Window *) {}};
+    std::unique_ptr<void, std::function<void(SDL_GLContext)>>
+            maincontext{nullptr, [](SDL_GLContext) {}};
 };
 
 mk::sdl2_helper::sdl2_helper(int gl_major, int gl_minor) :
@@ -31,21 +35,19 @@ mk::sdl2_helper::sdl2_helper(int gl_major, int gl_minor) :
     if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE))
         throw sdl2_error("Unable to set gl profile");
 
-    /* Turn on double buffering with a 24bit Z buffer.
-     * You may need to change this to 16 or 32 for your system */
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     /* Create our window centered at 512x512 resolution */
-    this->impl->mainwindow = SDL_CreateWindow("s70357", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                              512, 512,
-                                              SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
-    if (!this->impl->mainwindow) /* Die if creation failed */
+    this->impl->mainwindow = std::unique_ptr<SDL_Window, std::function<void(SDL_Window *)>>(
+            SDL_CreateWindow("s70357", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                             512, 512,
+                             SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI),
+            &SDL_GL_DeleteContext);
+    if (!this->impl->mainwindow)
         throw sdl2_error("Unable to create window");
 
-
-    /* Create our opengl context and attach it to our window */
-    this->impl->maincontext = SDL_GL_CreateContext(this->impl->mainwindow);
+    this->impl->maincontext = std::unique_ptr<void, std::function<void(SDL_GLContext)>>(
+            SDL_GL_CreateContext(this->impl->mainwindow.get()),
+            &SDL_GL_DeleteContext);
 
 
     /* This makes our buffer swap syncronized with the monitor's vertical refresh */
@@ -55,26 +57,25 @@ mk::sdl2_helper::sdl2_helper(int gl_major, int gl_minor) :
     glClearColor(1.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     /* Swap our back buffer to the front */
-    SDL_GL_SwapWindow(this->impl->mainwindow);
+    SDL_GL_SwapWindow(this->impl->mainwindow.get());
     /* Wait 2 seconds */
     SDL_Delay(2000);
 
     /* Same as above, but green */
     glClearColor(0.0, 1.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(this->impl->mainwindow);
+    SDL_GL_SwapWindow(this->impl->mainwindow.get());
     SDL_Delay(2000);
 
     /* Same as above, but blue */
     glClearColor(0.0, 0.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(this->impl->mainwindow);
+    SDL_GL_SwapWindow(this->impl->mainwindow.get());
     SDL_Delay(2000);
 }
 
 mk::sdl2_helper::~sdl2_helper() {
-    /* Delete our opengl context, destroy our window, and shutdown SDL */
-    SDL_GL_DeleteContext(this->impl->maincontext);
-    SDL_DestroyWindow(this->impl->mainwindow);
+    this->impl->maincontext.reset();
+    this->impl->mainwindow.reset();
     SDL_Quit();
 }
