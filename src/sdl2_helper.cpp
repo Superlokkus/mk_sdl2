@@ -40,40 +40,18 @@ mk::sdl2_helper::sdl2_helper(int gl_major, int gl_minor) :
     this->impl->mainwindow = SDL_CreateWindow("s70357", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                               512, 512,
                                               SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
-    if (!this->impl->mainwindow) /* Die if creation failed */
+    if (!this->impl->mainwindow)
         throw sdl2_error("Unable to create window");
 
-
-    /* Create our opengl context and attach it to our window */
     this->impl->maincontext = SDL_GL_CreateContext(this->impl->mainwindow);
-
-
-    /* This makes our buffer swap syncronized with the monitor's vertical refresh */
-    SDL_GL_SetSwapInterval(1);
-
-    /* Clear our buffer with a red background */
-    glClearColor(1.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    /* Swap our back buffer to the front */
-    SDL_GL_SwapWindow(this->impl->mainwindow);
-    /* Wait 2 seconds */
-    SDL_Delay(2000);
-
-    /* Same as above, but green */
-    glClearColor(0.0, 1.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(this->impl->mainwindow);
-    SDL_Delay(2000);
-
-    /* Same as above, but blue */
-    glClearColor(0.0, 0.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    SDL_GL_SwapWindow(this->impl->mainwindow);
-    SDL_Delay(2000);
+    if (!this->impl->maincontext) {
+        SDL_DestroyWindow(this->impl->mainwindow);
+        SDL_Quit();
+        throw sdl2_error("Unable to create context");
+    }
 }
 
 mk::sdl2_helper::~sdl2_helper() {
-    /* Delete our opengl context, destroy our window, and shutdown SDL */
     SDL_GL_DeleteContext(this->impl->maincontext);
     SDL_DestroyWindow(this->impl->mainwindow);
     SDL_Quit();
