@@ -19,6 +19,10 @@ struct mk::sdl2_helper::impl {
     SDL_GLContext maincontext{};
 };
 
+void mk::sdl2_helper::redraw(void) {
+    SDL_GL_SwapWindow(this->impl->mainwindow);
+}
+
 mk::sdl2_helper::sdl2_helper(int gl_major, int gl_minor) :
         impl(new struct impl()) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)

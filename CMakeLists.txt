@@ -28,6 +28,6 @@ foreach(resource ${shader_files})
     configure_file(${PROJECT_SHADER_DIR}/${resource} ${resource} COPYONLY)
 endforeach()
 
-add_executable(triangle ${PROJECT_SOURCE_DIR}/main.cpp src/sdl2_helper.cpp src/sdl2_helper.hpp)
+add_executable(triangle ${PROJECT_SOURCE_DIR}/main.cpp src/sdl2_helper.cpp src/sdl2_helper.hpp src/renderer.cpp src/renderer.hpp)
 target_link_libraries(triangle ${SDL2_LIBRARY} ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} )
 

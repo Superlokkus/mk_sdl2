@@ -17,6 +17,8 @@ class sdl2_helper final {
 public:
     sdl2_helper(int gl_major = 3, int gl_minor = 3);
 
+    void redraw(void);
+
     ~sdl2_helper();
 
 private:
