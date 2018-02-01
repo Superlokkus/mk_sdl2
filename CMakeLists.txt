@@ -28,6 +28,14 @@ foreach(resource ${shader_files})
     configure_file(${PROJECT_SHADER_DIR}/${resource} ${resource} COPYONLY)
 endforeach()
 
-add_executable(triangle ${PROJECT_SOURCE_DIR}/main.cpp src/sdl2_opengl_helper.cpp src/sdl2_opengl_helper.hpp src/renderer.cpp src/renderer.hpp)
-target_link_libraries(triangle ${SDL2_LIBRARY} ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES} )
+set(prakt_sdl_main_src
+        ${PROJECT_SOURCE_DIR}/main.cpp
+        src/sdl2_opengl_helper.cpp
+        src/sdl2_opengl_helper.hpp
+        src/renderer.cpp
+        src/renderer.hpp
+        )
+
+add_executable(prakt_sdl_main ${prakt_sdl_main_src})
+target_link_libraries(prakt_sdl_main ${SDL2_LIBRARY} ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES})
 

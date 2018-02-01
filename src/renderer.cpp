@@ -1,9 +1,9 @@
 #include "renderer.hpp"
 
 #include <GL/glew.h>
-#include <SDL2/SDL.h>
 #include "LoadShader.hpp"
 
+namespace {
 GLint height = 100, width = 100;
 enum VAO_IDs {
     Triangles, NumVAOs
@@ -18,6 +18,7 @@ GLuint VAOs[NumVAOs];
 GLuint Buffers[NumBuffers];
 const GLuint NumVertices = 6;
 GLuint program;
+}
 
 mk::renderer::renderer() {
     glewExperimental = GL_TRUE;
@@ -39,7 +40,10 @@ mk::renderer::renderer() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0);
     glEnableVertexAttribArray(vPosition);
+}
 
+void mk::renderer::praktikum01() {
+    glClearColor(0, 1.0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     glBindVertexArray(VAOs[Triangles]);
     glVertexAttrib3f(vColor, 1, 0, 0);
@@ -47,6 +51,5 @@ mk::renderer::renderer() {
     glVertexAttrib3f(vColor, 0, 1, 0);
     glDrawArrays(GL_LINE_LOOP, 3, NumVertices / 2);
     glFlush();
-
 }
 

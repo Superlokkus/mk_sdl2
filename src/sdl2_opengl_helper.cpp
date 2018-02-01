@@ -51,13 +51,15 @@ mk::sdl2_opengl_helper::sdl2_opengl_helper(int gl_major, int gl_minor) :
     this->impl->mainwindow = SDL_CreateWindow("s70357", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                               512, 512,
                                               SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
-    if (!this->impl->mainwindow)
+    if (!this->impl->mainwindow) {
+        SDL_QuitSubSystem(this->impl->sdl_init_flags);
         throw sdl2_error("Unable to create window");
+    }
 
     this->impl->maincontext = SDL_GL_CreateContext(this->impl->mainwindow);
     if (!this->impl->maincontext) {
         SDL_DestroyWindow(this->impl->mainwindow);
-        SDL_Quit();
+        SDL_QuitSubSystem(this->impl->sdl_init_flags);
         throw sdl2_error("Unable to create context");
     }
 }
