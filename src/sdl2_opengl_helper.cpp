@@ -49,8 +49,8 @@ mk::sdl2_opengl_helper::sdl2_opengl_helper(int gl_major, int gl_minor) :
 
     /* Create our window centered at 512x512 resolution */
     this->impl->mainwindow = SDL_CreateWindow("s70357", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                              512, 512,
-                                              SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
+                                              800, 600,
+                                              SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS);
     if (!this->impl->mainwindow) {
         SDL_QuitSubSystem(this->impl->sdl_init_flags);
         throw sdl2_error("Unable to create window");

@@ -1,3 +1,5 @@
+/*! @file sdl2_opengl_helper.hpp
+ */
 #ifndef CG1_S70357_2017_SDL2_HELPER_HPP
 #define CG1_S70357_2017_SDL2_HELPER_HPP
 
@@ -18,6 +20,9 @@ class sdl2_opengl_helper final {
 public:
     explicit sdl2_opengl_helper(int gl_major = 3, int gl_minor = 3);
 
+    /*! Swaps the double buffered window
+     * @note According to SDL2 "On Mac OS X make sure you bind 0 to the draw framebuffer before swapping the window, otherwise nothing will happen. See this blog post for more info."
+     */
     void redraw(void);
 
     ~sdl2_opengl_helper();
@@ -33,6 +38,7 @@ public:
 
     ~sdl2_event_helper();
 
+    /*! Takes the next UI event and calls the according handler*/
     void update_ui();
 
     using event_handler = std::function<void(void)>;
