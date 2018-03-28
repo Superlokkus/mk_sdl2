@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include "LoadShader.hpp"
 
+
 namespace {
 GLint height = 100, width = 100;
 enum VAO_IDs {
@@ -42,7 +43,7 @@ mk::renderer::renderer() {
     glEnableVertexAttribArray(vPosition);
 }
 
-void mk::renderer::praktikum01() {
+void mk::renderer::praktikum01_1() {
     glClearColor(0, 1.0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     glBindVertexArray(VAOs[Triangles]);
@@ -52,4 +53,17 @@ void mk::renderer::praktikum01() {
     glDrawArrays(GL_LINE_LOOP, 3, NumVertices / 2);
     glFlush();
 }
+
+void mk::renderer::praktikum01_2() {
+    glClearColor(1, 1, 1, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    std::vector<std::tuple<GLfloat, GLfloat>> htw_logo_vertices = {
+            {0, 0},
+            {3, 0},
+            {3, 15},
+            {0, 15}
+    };
+}
+
+
 

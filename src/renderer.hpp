@@ -7,7 +7,9 @@ class renderer final {
 public:
     renderer();
 
-    void praktikum01();
+    void praktikum01_1();
+
+    void praktikum01_2();
 
 };
 
