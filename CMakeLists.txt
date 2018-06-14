@@ -32,8 +32,8 @@ set(prakt_sdl_main_src
         ${PROJECT_SOURCE_DIR}/main.cpp
         src/sdl2_opengl_helper.cpp
         src/sdl2_opengl_helper.hpp
-        src/renderer.cpp
-        src/renderer.hpp
+        src/opengl_helper.cpp
+        src/opengl_helper.hpp
         )
 
 add_executable(prakt_sdl_main ${prakt_sdl_main_src})
