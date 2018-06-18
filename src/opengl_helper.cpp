@@ -20,11 +20,31 @@ const GLuint NumVertices = 6;
 GLuint program;
 }
 
+const std::string vertexShader = {"#version 330 core\n"
+                                  "\n"
+                                  "layout(location = 0) in vec4 vPosition;\n"
+                                  "\n"
+                                  "void main() {\n"
+                                  "\tgl_Position = vPosition;\n"
+                                  "}"};
+
+const std::string fragmentShader = {"#version 330 core\n"
+                                    "\n"
+                                    "out vec4 fColor;\n"
+                                    "\n"
+                                    "void main() {\n"
+                                    "\tif(gl_PrimitiveID == 0) {\n"
+                                    "\t\tfColor = vec4(0.0, 0.0, 1.0, 1.0);\n"
+                                    "\t} else {\n"
+                                    "\t\tfColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+                                    "\t}\n"
+                                    "}"};
+
 mk::opengl_helper::opengl_helper() {
     glewExperimental = GL_TRUE;
     if (glewInit())
         throw std::runtime_error("glewInit failed");
-    program = loadShaders("Dreiecke.vs", "Dreiecke.fs", "", "", "", "");
+    program = loadShaders(vertexShader, fragmentShader, "", "", "", "");
     glUseProgram(program);
     glGenBuffers(NumBuffers, Buffers);//NumBuffers = 1
     glGenVertexArrays(NumVAOs, VAOs);//NumVAOs = 1

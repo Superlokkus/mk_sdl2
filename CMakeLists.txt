@@ -15,18 +15,9 @@ include_directories(${SDL2_INCLUDE_DIR})
 
 
 set (PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
-set (PROJECT_SHADER_DIR ${PROJECT_SOURCE_DIR}/shader)
-
-set (shader_files
-        Dreiecke.fs
-        Dreiecke.vs
-        )
 
 include_directories("${PROJECT_BINARY_DIR}")
 
-foreach(resource ${shader_files})
-    configure_file(${PROJECT_SHADER_DIR}/${resource} ${resource} COPYONLY)
-endforeach()
 
 set(prakt_sdl_main_src
         ${PROJECT_SOURCE_DIR}/main.cpp
