@@ -7,6 +7,17 @@
 
 namespace mk {
 
+struct opengl_error : std::exception {
+    opengl_error(std::string error) : std::exception(), what_(std::move(error)) {};
+
+    const char *what() const noexcept override {
+        return this->what_.c_str();
+    }
+
+private:
+    std::string what_;
+};
+
 /*! @brief Utility class for glew and opengl
  *
  */
@@ -30,12 +41,32 @@ public:
 
     static uint32_t shader_type_to_gl_enum(shader_type);
 
+    class opengl_program {
+    public:
+        uint32_t program_id();
+
+        opengl_program();
+
+        virtual ~opengl_program();
+
+        void attach_shaders(const std::map<shader_type, std::string> &shaders);
+
+        void set_as_current_program();
+
+        bool is_linked();
+
+        bool is_current();
+
+    private:
+        uint32_t program_id_;
+
+        void set_shaders(std::map<mk::opengl_helper::shader_type, std::tuple<std::string, uint32_t>> &shaders);
+    };
+
     void praktikum01_1();
 
     void praktikum01_2();
 
-private:
-    uint32_t set_shaders(const std::map<shader_type, std::string> &shaders);
 
 };
 

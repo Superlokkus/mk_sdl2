@@ -23,9 +23,6 @@ enum Attrib_IDs {
 GLuint VAOs[NumVAOs];
 GLuint Buffers[NumBuffers];
 const GLuint NumVertices = 6;
-GLuint program;
-
-GLuint loadShaders(std::map<mk::opengl_helper::shader_type, std::tuple<std::string, GLuint>> &shaders);
 
 }
 
@@ -57,8 +54,11 @@ mk::opengl_helper::opengl_helper() {
             {shader_type::vertex_shader,   vertexShader},
             {shader_type::fragment_shader, fragmentShader},
     };
-    program = this->set_shaders(shaders);
-    glUseProgram(program);
+
+    opengl_program program{};
+    program.attach_shaders(shaders);
+    program.set_as_current_program();
+
     glGenBuffers(NumBuffers, Buffers);//NumBuffers = 1
     glGenVertexArrays(NumVAOs, VAOs);//NumVAOs = 1
     GLfloat vertices[NumVertices][2] = {
@@ -73,6 +73,53 @@ mk::opengl_helper::opengl_helper() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0);//vPosition = 0
     glEnableVertexAttribArray(vPosition);
+}
+
+uint32_t mk::opengl_helper::opengl_program::program_id() {
+    return this->program_id_;
+}
+
+mk::opengl_helper::opengl_program::opengl_program()
+        : program_id_(0) {
+    this->program_id_ = glCreateProgram();
+    if (this->program_id_ == 0)
+        throw opengl_error("glCreateProgram failed");
+}
+
+mk::opengl_helper::opengl_program::~opengl_program() {
+    glDeleteProgram(this->program_id_);
+}
+
+void mk::opengl_helper::opengl_program::attach_shaders(
+        const std::map<mk::opengl_helper::shader_type, std::string> &shaders) {
+
+    std::map<shader_type, std::tuple<std::string, GLuint>> transformed_shaders;
+    for (const auto &shader: shaders) {
+        transformed_shaders[shader.first] = std::make_tuple(shader.second, 0);
+    }
+
+    this->set_shaders(transformed_shaders);
+}
+
+void mk::opengl_helper::opengl_program::set_as_current_program() {
+    glUseProgram(this->program_id_);
+
+    if (!this->is_linked())
+        throw opengl_error("program not linked");
+    if (!this->is_current())
+        throw opengl_error("glUseProgram failed, program is not current");
+}
+
+bool mk::opengl_helper::opengl_program::is_linked() {
+    GLint param = GL_TRUE;
+    glGetProgramiv(this->program_id_, GL_LINK_STATUS, &param);
+    return param;
+}
+
+bool mk::opengl_helper::opengl_program::is_current() {
+    int64_t current_program{0};
+    glGetInteger64v(GL_CURRENT_PROGRAM, &current_program);
+    return current_program == this->program_id_;
 }
 
 mk::opengl_helper::~opengl_helper() {
@@ -107,13 +154,49 @@ uint32_t mk::opengl_helper::shader_type_to_gl_enum(shader_type shader_type) {
     return value;
 }
 
-uint32_t mk::opengl_helper::set_shaders(const std::map<mk::opengl_helper::shader_type, std::string> &shaders) {
-    std::map<shader_type, std::tuple<std::string, GLuint>> transformed_shaders;
-    for (const auto &shader: shaders) {
-        transformed_shaders[shader.first] = std::make_tuple(shader.second, 0);
+void mk::opengl_helper::opengl_program::set_shaders(
+        std::map<mk::opengl_helper::shader_type, std::tuple<std::string, GLuint>> &shaders) {
+
+    const auto programID = this->program_id_;
+
+    GLint infoLogLength;
+
+    for (auto &shader : shaders) {
+        const auto &shaderCode = std::get<0>(shader.second);
+        GLuint &shaderId = std::get<1>(shader.second);
+        std::get<1>(shader.second) = glCreateShader(mk::opengl_helper::shader_type_to_gl_enum(shader.first));
+        if (shaderCode.empty())
+            continue;
+        char const *vertexShaderPointer = shaderCode.c_str();
+        const GLint vertexSourceLength = shaderCode.size();
+        glShaderSource(shaderId, 1, &vertexShaderPointer, &vertexSourceLength);
+        glCompileShader(shaderId);
+
+        glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
+        if (infoLogLength > 0) {
+            std::vector<char> vertexShaderErrorMsg(infoLogLength);
+            glGetShaderInfoLog(shaderId, infoLogLength, NULL, &vertexShaderErrorMsg[0]);
+            throw opengl_error{std::string{vertexShaderErrorMsg.data()}};
+        }
+
     }
 
-    return loadShaders(transformed_shaders);
+    for (const auto &shader: shaders) {
+        const auto &shaderCode = std::get<0>(shader.second);
+        const auto &shaderId = std::get<1>(shader.second);
+        if (!shaderCode.empty()) {
+            glAttachShader(programID, shaderId);
+        }
+    }
+
+    glLinkProgram(this->program_id_);
+
+    for (const auto &shader: shaders) {
+        const auto &shaderCode = std::get<0>(shader.second);
+        const auto &shaderId = std::get<1>(shader.second);
+        glDeleteShader(shaderId);
+    }
+
 }
 
 void mk::opengl_helper::praktikum01_1() {
@@ -134,66 +217,4 @@ void mk::opengl_helper::praktikum01_2() {
             {3, 15},
             {0, 15}
     };
-}
-
-namespace {
-GLuint loadShaders(std::map<mk::opengl_helper::shader_type, std::tuple<std::string, GLuint>> &shaders) {
-
-    GLint infoLogLength;
-    GLint result = GL_FALSE;
-
-    for (auto &shader : shaders) {
-        const auto &shaderCode = std::get<0>(shader.second);
-        GLuint &shaderId = std::get<1>(shader.second);
-        std::get<1>(shader.second) = glCreateShader(mk::opengl_helper::shader_type_to_gl_enum(shader.first));
-        if (shaderCode.empty())
-            continue;
-        std::cout << "compiling shader: " << shaderCode << "\n";
-        char const *vertexShaderPointer = shaderCode.c_str();
-        const GLint vertexSourceLength = shaderCode.size();
-        glShaderSource(shaderId, 1, &vertexShaderPointer, &vertexSourceLength);
-        glCompileShader(shaderId);
-
-        glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
-        if (result == GL_FALSE) {
-            printf("shader putt\n");
-        }
-        glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
-        if (infoLogLength > 0) {
-            std::vector<char> vertexShaderErrorMsg(infoLogLength);
-            glGetShaderInfoLog(shaderId, infoLogLength, NULL, &vertexShaderErrorMsg[0]);
-            printf("%s\n", &vertexShaderErrorMsg[0]);
-        }
-
-    }
-
-    std::cout << "linking program\n";
-    GLuint programID = glCreateProgram();
-
-    for (const auto &shader: shaders) {
-        const auto &shaderCode = std::get<0>(shader.second);
-        const auto &shaderId = std::get<1>(shader.second);
-        if (!shaderCode.empty()) {
-            glAttachShader(programID, shaderId);
-        }
-    }
-    glLinkProgram(programID);
-
-    glGetProgramiv(programID, GL_LINK_STATUS, &result);
-    glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if (infoLogLength > 0) {
-        std::vector<GLchar> progErrorMsg(infoLogLength);
-        glGetProgramInfoLog(programID, infoLogLength, NULL, progErrorMsg.data());
-        std::cerr << progErrorMsg.data() << "\n";
-    }
-
-    for (const auto &shader: shaders) {
-        const auto &shaderCode = std::get<0>(shader.second);
-        const auto &shaderId = std::get<1>(shader.second);
-        glDeleteShader(shaderId);
-    }
-
-
-    return programID;
-}
 }
