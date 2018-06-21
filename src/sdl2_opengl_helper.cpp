@@ -117,3 +117,33 @@ auto mk::sdl2_event_helper::replace_quit_handler(mk::sdl2_event_helper::event_ha
     this->impl->current_quit_handler.swap(new_handler);
     return new_handler;
 }
+
+mk::sdl2_log_helper::sdl2_log_helper() = default;
+
+mk::sdl2_log_helper::~sdl2_log_helper() = default;
+
+void mk::sdl2_log_helper::log(const std::string &message) const {
+    this->log(message.c_str());
+}
+
+void mk::sdl2_log_helper::log(const char *message) const {
+    this->log_(message);
+}
+
+mk::sdl2_log_helper &mk::sdl2_log_helper::operator<<(const std::string &message) {
+    this->log(message);
+    return *this;
+}
+
+mk::sdl2_log_helper &mk::sdl2_log_helper::operator<<(const char *message) {
+    this->log(message);
+    return *this;
+}
+
+void mk::sdl2_log_helper::log_(const char *message) const {
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
+}
+
+void mk::sdl2_cerr::log_(const char *message) const {
+    SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "%s", message);
+}

@@ -7,6 +7,7 @@
 #include <exception>
 #include <string>
 #include <functional>
+#include <iostream>
 
 namespace mk {
 
@@ -52,6 +53,31 @@ private:
     std::unique_ptr<impl> impl;
 };
 
+class sdl2_log_helper {
+public:
+    explicit sdl2_log_helper();
+
+    virtual ~sdl2_log_helper();
+
+    void log(const std::string &) const;
+
+    void log(const char *) const;
+
+    sdl2_log_helper &operator<<(const std::string &);
+
+    sdl2_log_helper &operator<<(const char *);
+
+protected:
+    virtual void log_(const char *) const;
+};
+
+struct sdl2_cerr : sdl2_log_helper {
+protected:
+    void log_(const char *) const override;
+};
+
+struct sdl2_cout : sdl2_log_helper {
+};
 
 }
 
