@@ -25,7 +25,7 @@ set(prakt_sdl_main_src
         src/sdl2_opengl_helper.hpp
         src/opengl_helper.cpp
         src/opengl_helper.hpp
-        )
+        src/exercises.cpp src/exercises.hpp)
 
 add_executable(prakt_sdl_main ${prakt_sdl_main_src})
 target_link_libraries(prakt_sdl_main ${SDL2_LIBRARY} ${GLEW_LIBRARIES} ${OPENGL_LIBRARIES})

@@ -28,7 +28,7 @@ public:
      */
     opengl_helper();
 
-    ~opengl_helper();
+    ~opengl_helper() = default;
 
     enum struct shader_type {
         vertex_shader,
@@ -62,11 +62,6 @@ public:
 
         void set_shaders(std::map<mk::opengl_helper::shader_type, std::tuple<std::string, uint32_t>> &shaders);
     };
-
-    void praktikum01_1();
-
-    void praktikum01_2();
-
 
 };
 

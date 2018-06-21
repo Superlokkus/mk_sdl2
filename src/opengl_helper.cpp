@@ -1,7 +1,6 @@
 #include "opengl_helper.hpp"
 
 #include <GL/glew.h>
-#include <iostream>
 #include <string>
 #include <algorithm>
 #include <iterator>
@@ -9,70 +8,10 @@
 #include <tuple>
 #include <vector>
 
-
-namespace {
-enum VAO_IDs {
-    Triangles, NumVAOs
-};
-enum Buffer_IDs {
-    ArrayBuffer, NumBuffers
-};
-enum Attrib_IDs {
-    vPosition, vColor
-};
-GLuint VAOs[NumVAOs];
-GLuint Buffers[NumBuffers];
-const GLuint NumVertices = 6;
-
-}
-
-const std::string vertexShader = {"#version 330 core\n"
-                                  "\n"
-                                  "layout(location = 0) in vec4 vPosition;\n"
-                                  "\n"
-                                  "void main() {\n"
-                                  "\tgl_Position = vPosition;\n"
-                                  "}"};
-
-const std::string fragmentShader = {"#version 330 core\n"
-                                    "\n"
-                                    "out vec4 fColor;\n"
-                                    "\n"
-                                    "void main() {\n"
-                                    "\tif(gl_PrimitiveID == 0) {\n"
-                                    "\t\tfColor = vec4(0.0, 0.0, 1.0, 1.0);\n"
-                                    "\t} else {\n"
-                                    "\t\tfColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-                                    "\t}\n"
-                                    "}"};
-
 mk::opengl_helper::opengl_helper() {
     glewExperimental = GL_TRUE;
     if (glewInit())
         throw std::runtime_error("glewInit failed");
-    std::map<shader_type, std::string> shaders{
-            {shader_type::vertex_shader,   vertexShader},
-            {shader_type::fragment_shader, fragmentShader},
-    };
-
-    opengl_program program{};
-    program.attach_shaders(shaders);
-    program.set_as_current_program();
-
-    glGenBuffers(NumBuffers, Buffers);//NumBuffers = 1
-    glGenVertexArrays(NumVAOs, VAOs);//NumVAOs = 1
-    GLfloat vertices[NumVertices][2] = {
-            {-0.90, -0.90},
-            {0.85,  -0.90},
-            {-0.90, 0.85},
-            {0.90,  -0.85},
-            {0.90,  0.90},
-            {-0.85, 0.90}};
-    glBindVertexArray(VAOs[Triangles]);//Triangles = 0
-    glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]); //ArrayBuffer = 0
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0);//vPosition = 0
-    glEnableVertexAttribArray(vPosition);
 }
 
 uint32_t mk::opengl_helper::opengl_program::program_id() {
@@ -120,10 +59,6 @@ bool mk::opengl_helper::opengl_program::is_current() {
     int64_t current_program{0};
     glGetInteger64v(GL_CURRENT_PROGRAM, &current_program);
     return current_program == this->program_id_;
-}
-
-mk::opengl_helper::~opengl_helper() {
-    glDeleteBuffers(NumBuffers, Buffers);
 }
 
 uint32_t mk::opengl_helper::shader_type_to_gl_enum(shader_type shader_type) {
@@ -199,22 +134,3 @@ void mk::opengl_helper::opengl_program::set_shaders(
 
 }
 
-void mk::opengl_helper::praktikum01_1() {
-    glClearColor(0, 1.0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glVertexAttrib3f(vColor, 1, 0, 0);
-    glDrawArrays(GL_TRIANGLES, 0, NumVertices / 2);
-    glVertexAttrib3f(vColor, 0, 1, 0);
-    glDrawArrays(GL_LINE_LOOP, 3, NumVertices / 2);
-}
-
-void mk::opengl_helper::praktikum01_2() {
-    glClearColor(1, 1, 1, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    std::vector<std::tuple<GLfloat, GLfloat>> htw_logo_vertices = {
-            {0, 0},
-            {3, 0},
-            {3, 15},
-            {0, 15}
-    };
-}
