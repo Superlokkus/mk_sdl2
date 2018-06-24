@@ -6,23 +6,29 @@
 #include <vector>
 #include <array>
 
-namespace {
-enum VAO_IDs {
-    Triangles, NumVAOs
-};
-enum Buffer_IDs {
-    ArrayBuffer, NumBuffers
-};
-enum Attrib_IDs {
-    vPosition, vColor
-};
-GLuint VAOs[NumVAOs];
-GLuint Buffers[NumBuffers];
-const GLuint NumVertices = 6;
-
-}
 
 exercises::praktikum01_1::praktikum01_1() {
+    vertexShader = "#version 330 core\n"
+                   "\n"
+                   "layout(location = 0) in vec4 vPosition;\n"
+                   "\n"
+                   "void main() {\n"
+                   "\tgl_Position = vPosition;\n"
+                   "}";
+
+    fragmentShader = "#version 330 core\n"
+                     "\n"
+                     "out vec4 fColor;\n"
+                     "\n"
+                     "void main() {\n"
+                     "\tif(gl_PrimitiveID == 0) {\n"
+                     "\t\tfColor = vec4(0.0, 0.0, 1.0, 1.0);\n"
+                     "\t} else {\n"
+                     "\t\tfColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+                     "\t}\n"
+                     "}";
+
+
     glGenBuffers(NumBuffers, Buffers);//NumBuffers = 1
     glGenVertexArrays(NumVAOs, VAOs);//NumVAOs = 1
     GLfloat vertices[NumVertices][2] = {
@@ -32,8 +38,8 @@ exercises::praktikum01_1::praktikum01_1() {
             {0.90,  -0.85},
             {0.90,  0.90},
             {-0.85, 0.90}};
-    glBindVertexArray(VAOs[Triangles]);//Triangles = 0
-    glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]); //ArrayBuffer = 0
+    glBindVertexArray(VAOs[0]);//Triangles = 0
+    glBindBuffer(GL_ARRAY_BUFFER, Buffers[0]); //ArrayBuffer = 0
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0);//vPosition = 0
     glEnableVertexAttribArray(vPosition);
@@ -95,7 +101,6 @@ void exercises::praktikum01_2::draw() {
     glClearColor(1, 1, 1, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     glBindVertexArray(this->impl->vertex_array_objects.at(0));
-    glVertexAttrib3f(vColor, 1, 0, 0);
+    glVertexAttrib3f(1, 1, 0, 0);
     glDrawArrays(GL_TRIANGLES, 0, this->impl->htw_logo_vertices.size());
-    glFlush();
 }

@@ -23,25 +23,17 @@ struct praktikum01_1 {
 
     void draw();
 
-    const std::string vertexShader = {"#version 330 core\n"
-                                      "\n"
-                                      "layout(location = 0) in vec4 vPosition;\n"
-                                      "\n"
-                                      "void main() {\n"
-                                      "\tgl_Position = vPosition;\n"
-                                      "}"};
-
-    const std::string fragmentShader = {"#version 330 core\n"
-                                        "\n"
-                                        "out vec4 fColor;\n"
-                                        "\n"
-                                        "void main() {\n"
-                                        "\tif(gl_PrimitiveID == 0) {\n"
-                                        "\t\tfColor = vec4(0.0, 0.0, 1.0, 1.0);\n"
-                                        "\t} else {\n"
-                                        "\t\tfColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-                                        "\t}\n"
-                                        "}"};
+private:
+    std::string vertexShader;
+    std::string fragmentShader;
+    static constexpr unsigned NumBuffers = 1;
+    static constexpr unsigned NumVAOs = 1;
+    static constexpr uint32_t NumVertices = 6;
+    enum Attrib_IDs {
+        vPosition, vColor
+    };
+    uint32_t VAOs[NumVAOs];
+    uint32_t Buffers[NumBuffers];
 };
 
 struct praktikum01_2 final {
