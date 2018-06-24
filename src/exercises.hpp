@@ -6,9 +6,11 @@
 
 #include "opengl_helper.hpp"
 
+#include <memory>
+
 namespace exercises {
 struct praktikum01_1 {
-    praktikum01_1();
+    explicit praktikum01_1();
 
     ~praktikum01_1();
 
@@ -42,7 +44,18 @@ struct praktikum01_1 {
                                         "}"};
 };
 
-void praktikum01_2();
+struct praktikum01_2 final {
+
+    explicit praktikum01_2();
+
+    ~praktikum01_2();
+
+    void draw();
+
+private:
+    struct impl;
+    std::unique_ptr<impl> impl;
+};
 
 }
 

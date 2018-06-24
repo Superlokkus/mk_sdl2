@@ -14,12 +14,13 @@ int main() {
         mk::opengl_helper opengl_helper{};
         {
             exercises::praktikum01_1 ex{};
+            exercises::praktikum01_2 ex2{};
             mk::opengl_helper::opengl_program program{};
             program.attach_shaders(ex.shaders());
             program.set_as_current_program();
-            ex.draw();
+            ex2.draw();
             sdl_opengl_helper.redraw();
-            ex.draw();
+            ex2.draw();
         }
 
         event_helper.replace_event_handler(std::bind(&mk::sdl2_opengl_helper::redraw, std::ref(sdl_opengl_helper)));
