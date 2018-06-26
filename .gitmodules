@@ -1,3 +1,6 @@
 [submodule "sdl2-cmake-scripts"]
 	path = sdl2-cmake-scripts
 	url = https://github.com/tcbrindle/sdl2-cmake-scripts.git
+[submodule "src/mk_graphics/sdl2-cmake-scripts"]
+	path = src/mk_graphics/sdl2-cmake-scripts
+	url = git@github.com:tcbrindle/sdl2-cmake-scripts.git

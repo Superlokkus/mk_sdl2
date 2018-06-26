@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "sdl2_opengl_helper.hpp"
-#include "opengl_helper.hpp"
+#include <sdl2_opengl_helper.hpp>
+#include <opengl_helper.hpp>
 #include "exercises.hpp"
 #include <cstdlib>
 

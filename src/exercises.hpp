@@ -4,7 +4,7 @@
 #ifndef CG1_S70357_2017_EXERCISES_HPP
 #define CG1_S70357_2017_EXERCISES_HPP
 
-#include "opengl_helper.hpp"
+#include <opengl_helper.hpp>
 
 #include <memory>
 

@@ -1,6 +1,6 @@
 #include "exercises.hpp"
-#include "opengl_helper.hpp"
-#include "sdl2_opengl_helper.hpp"
+#include <opengl_helper.hpp>
+#include <sdl2_opengl_helper.hpp>
 
 #include <GL/glew.h>
 #include <vector>
@@ -88,7 +88,7 @@ exercises::praktikum01_2::praktikum01_2() : pimpl(new struct impl) {
     glBufferData(GL_ARRAY_BUFFER,
                  this->pimpl->htw_logo_vertices.size() * sizeof(decltype(this->pimpl->htw_logo_vertices)::value_type),
                  this->pimpl->htw_logo_vertices.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, true, 0, 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
     glEnableVertexAttribArray(0);
 }
 
