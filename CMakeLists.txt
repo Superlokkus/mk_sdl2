@@ -5,9 +5,10 @@ set(CMAKE_CXX_STANDARD 11)
 
 set (PROJECT_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
 
-include_directories("${PROJECT_BINARY_DIR}")
-
 add_subdirectory(${PROJECT_SOURCE_DIR}/mk_graphics)
+
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_DIRS})
 
 set(prakt_sdl_main_src
         ${PROJECT_SOURCE_DIR}/main.cpp
@@ -16,7 +17,7 @@ set(prakt_sdl_main_src
         )
 
 add_executable(prakt_sdl_main ${prakt_sdl_main_src})
-target_link_libraries(prakt_sdl_main ${mk_graphics})
+target_link_libraries(prakt_sdl_main mk_graphics)
 
 set(TEST_ENABLED TRUE CACHE BOOL "Tests are enabled")
 if (${TEST_ENABLED})

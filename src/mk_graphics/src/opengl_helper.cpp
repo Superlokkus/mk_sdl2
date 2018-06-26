@@ -1,4 +1,4 @@
-#include "opengl_helper.hpp"
+#include <opengl_helper.hpp>
 
 #include <GL/glew.h>
 #include <string>
