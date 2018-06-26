@@ -46,7 +46,7 @@ struct praktikum01_2 final {
 
 private:
     struct impl;
-    std::unique_ptr<impl> impl;
+    std::unique_ptr<impl> pimpl;
 };
 
 }

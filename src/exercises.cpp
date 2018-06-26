@@ -65,8 +65,8 @@ struct exercises::praktikum01_2::impl {
     std::array<GLuint, 1> vertex_array_objects;
 };
 
-exercises::praktikum01_2::praktikum01_2() : impl(new struct impl) {
-    this->impl->htw_logo_vertices = {
+exercises::praktikum01_2::praktikum01_2() : pimpl(new struct impl) {
+    this->pimpl->htw_logo_vertices = {
             {-0.90, -0.90},
             {0.85,  -0.90},
             {-0.90, 0.85},
@@ -80,27 +80,27 @@ exercises::praktikum01_2::praktikum01_2() : impl(new struct impl) {
     {0, 15},
     {0,0},
 };*/
-    glGenBuffers(this->impl->buffer_objects.max_size(), this->impl->buffer_objects.data());
-    glGenBuffers(this->impl->vertex_array_objects.max_size(), this->impl->vertex_array_objects.data());
+    glGenBuffers(this->pimpl->buffer_objects.max_size(), this->pimpl->buffer_objects.data());
+    glGenBuffers(this->pimpl->vertex_array_objects.max_size(), this->pimpl->vertex_array_objects.data());
 
-    //glBindVertexArray(this->impl->vertex_array_objects.at(0));
-    glBindBuffer(GL_ARRAY_BUFFER, this->impl->buffer_objects.at(0));
+    //glBindVertexArray(this->pimpl->vertex_array_objects.at(0));
+    glBindBuffer(GL_ARRAY_BUFFER, this->pimpl->buffer_objects.at(0));
     glBufferData(GL_ARRAY_BUFFER,
-                 this->impl->htw_logo_vertices.size() * sizeof(decltype(this->impl->htw_logo_vertices)::value_type),
-                 this->impl->htw_logo_vertices.data(), GL_STATIC_DRAW);
+                 this->pimpl->htw_logo_vertices.size() * sizeof(decltype(this->pimpl->htw_logo_vertices)::value_type),
+                 this->pimpl->htw_logo_vertices.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(0, 2, GL_FLOAT, true, 0, 0);
     glEnableVertexAttribArray(0);
 }
 
 exercises::praktikum01_2::~praktikum01_2() {
-    glDeleteBuffers(this->impl->buffer_objects.size(), this->impl->buffer_objects.data());
-    glDeleteVertexArrays(this->impl->vertex_array_objects.size(), this->impl->vertex_array_objects.data());
+    glDeleteBuffers(this->pimpl->buffer_objects.size(), this->pimpl->buffer_objects.data());
+    glDeleteVertexArrays(this->pimpl->vertex_array_objects.size(), this->pimpl->vertex_array_objects.data());
 }
 
 void exercises::praktikum01_2::draw() {
     glClearColor(1, 1, 1, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-    glBindVertexArray(this->impl->vertex_array_objects.at(0));
+    glBindVertexArray(this->pimpl->vertex_array_objects.at(0));
     glVertexAttrib3f(1, 1, 0, 0);
-    glDrawArrays(GL_TRIANGLES, 0, this->impl->htw_logo_vertices.size());
+    glDrawArrays(GL_TRIANGLES, 0, this->pimpl->htw_logo_vertices.size());
 }
