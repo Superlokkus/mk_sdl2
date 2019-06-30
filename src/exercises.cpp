@@ -8,29 +8,33 @@
 
 
 exercises::praktikum01_1::praktikum01_1() {
-    vertexShader = "#version 330 core\n"
-                   "\n"
-                   "layout(location = 0) in vec4 vPosition;\n"
-                   "\n"
-                   "void main() {\n"
-                   "\tgl_Position = vPosition;\n"
-                   "}";
+    vertexShader = R"SHADER_DELIM(
+#version 330 core
 
-    fragmentShader = "#version 330 core\n"
-                     "\n"
-                     "out vec4 fColor;\n"
-                     "\n"
-                     "void main() {\n"
-                     "\tif(gl_PrimitiveID == 0) {\n"
-                     "\t\tfColor = vec4(0.0, 0.0, 1.0, 1.0);\n"
-                     "\t} else {\n"
-                     "\t\tfColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-                     "\t}\n"
-                     "}";
+layout(location = 0) in vec4 vPosition;
+
+void main() {
+	gl_Position = vPosition;
+}
+    )SHADER_DELIM";
+
+    fragmentShader = R"SHADER_DELIM(
+#version 330 core
+
+out vec4 fColor;
+
+void main() {
+	if(gl_PrimitiveID == 0) {
+		fColor = vec4(0.0, 0.0, 1.0, 1.0);
+	} else {
+		fColor = vec4(1.0, 0.0, 0.0, 1.0);
+	}
+}
+            )SHADER_DELIM";
 
 
-    glGenBuffers(NumBuffers, Buffers);//NumBuffers = 1
-    glGenVertexArrays(NumVAOs, VAOs);//NumVAOs = 1
+    glGenBuffers(Buffers.size(), Buffers.data());//NumBuffers = 1
+    glGenVertexArrays(VAOs.size(), VAOs.data());//NumVAOs = 1
     GLfloat vertices[NumVertices][2] = {
             {-0.90, -0.90},
             {0.85,  -0.90},
@@ -41,12 +45,12 @@ exercises::praktikum01_1::praktikum01_1() {
     glBindVertexArray(VAOs[0]);//Triangles = 0
     glBindBuffer(GL_ARRAY_BUFFER, Buffers[0]); //ArrayBuffer = 0
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0);//vPosition = 0
+    glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, nullptr);//vPosition = 0
     glEnableVertexAttribArray(vPosition);
 }
 
 exercises::praktikum01_1::~praktikum01_1() {
-    glDeleteBuffers(NumBuffers, Buffers);
+    glDeleteBuffers(Buffers.size(), Buffers.data());
 }
 
 void exercises::praktikum01_1::draw() {
@@ -61,8 +65,8 @@ void exercises::praktikum01_1::draw() {
 struct exercises::praktikum01_2::impl {
     using vertex_t = std::tuple<GLfloat, GLfloat>;
     std::vector<vertex_t> htw_logo_vertices;
-    std::array<GLuint, 1> buffer_objects;
-    std::array<GLuint, 1> vertex_array_objects;
+    std::array<GLuint, 1> buffer_objects{};
+    std::array<GLuint, 1> vertex_array_objects{};
 };
 
 exercises::praktikum01_2::praktikum01_2() : pimpl(new struct impl) {
@@ -88,7 +92,7 @@ exercises::praktikum01_2::praktikum01_2() : pimpl(new struct impl) {
     glBufferData(GL_ARRAY_BUFFER,
                  this->pimpl->htw_logo_vertices.size() * sizeof(decltype(this->pimpl->htw_logo_vertices)::value_type),
                  this->pimpl->htw_logo_vertices.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, true, 0, 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, true, 0, nullptr);
     glEnableVertexAttribArray(0);
 }
 

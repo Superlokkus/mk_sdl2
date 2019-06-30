@@ -7,6 +7,7 @@
 #include "opengl_helper.hpp"
 
 #include <memory>
+#include <array>
 
 namespace exercises {
 struct praktikum01_1 {
@@ -32,8 +33,8 @@ private:
     enum Attrib_IDs {
         vPosition, vColor
     };
-    uint32_t VAOs[NumVAOs];
-    uint32_t Buffers[NumBuffers];
+    std::array<uint32_t, NumVAOs> VAOs{};
+    std::array<uint32_t, NumBuffers> Buffers{};
 };
 
 struct praktikum01_2 final {
