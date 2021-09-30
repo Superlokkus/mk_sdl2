@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "sdl2_opengl_helper.hpp"
+#include "sdl2_helpers.hpp"
 
 #include <cstdlib>
 

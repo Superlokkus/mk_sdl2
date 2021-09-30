@@ -9,7 +9,7 @@ set(prakt_sdl_main_src
         src/sdl2_opengl_helper.hpp
         src/sdl2_audio_helper.cpp
         src/sdl2_audio_helper.hpp
-        )
+        src/sdl2_helpers.cpp src/sdl2_helpers.hpp)
 
 add_executable(${PROJECT_NAME} ${prakt_sdl_main_src})
 set_property(TARGET ${PROJECT_NAME} PROPERTY LINKER_LANGUAGE CXX)
