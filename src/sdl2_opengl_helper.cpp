@@ -1,8 +1,8 @@
 #include "sdl2_opengl_helper.hpp"
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
-#include <SDL2/SDL_events.h>
+#include <SDL.h>
+#include <SDL_opengl.h>
+#include <SDL_events.h>
 #include <cstdlib>
 
 mk::sdl2_error::sdl2_error(const std::string &what) :
