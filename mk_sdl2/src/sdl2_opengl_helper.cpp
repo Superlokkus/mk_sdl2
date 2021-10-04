@@ -1,11 +1,11 @@
-#include "sdl2_opengl_helper.hpp"
+#include <mk_sdl2/sdl2_opengl_helper.hpp>
 
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SDL_events.h>
 #include <cstdlib>
 
-#include "sdl2_helpers.hpp"
+#include <mk_sdl2/sdl2_helpers.hpp>
 
 struct mk::sdl2_opengl_helper::impl {
     SDL_Window *mainwindow{nullptr};

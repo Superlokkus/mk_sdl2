@@ -1,4 +1,4 @@
-#include "sdl2_helpers.hpp"
+#include <mk_sdl2/sdl2_helpers.hpp>
 
 #include <SDL.h>
 #include <SDL_events.h>

@@ -1,11 +1,11 @@
-#include "sdl2_audio_helper.hpp"
+#include <mk_sdl2/sdl2_audio_helper.hpp>
 
 #include <utility>
 
 #include <SDL.h>
 #include <SDL_audio.h>
 
-#include "sdl2_helpers.hpp"
+#include <mk_sdl2/sdl2_helpers.hpp>
 
 namespace mk {
 
