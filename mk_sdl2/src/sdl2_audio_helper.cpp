@@ -34,10 +34,12 @@ void sdl2_audio_helper::play_wave(const std::string_view &path) {
 
     SDL_AudioSpec ob_spec{};
     auto device = SDL_OpenAudioDevice(NULL, 0, &spec, &ob_spec, SDL_AUDIO_ALLOW_ANY_CHANGE);
-    if (device == 0) {
+    if (!device) {
         throw sdl2_error("Can not open audio device");
     }
-    SDL_QueueAudio(device, audio_buf, audio_len);
+    if (SDL_QueueAudio(device, audio_buf, audio_len)) {
+        throw sdl2_error("Can not queue audio");
+    }
     SDL_PauseAudioDevice(device, 0);
 
     //SDL_CloseAudioDevice(device);
