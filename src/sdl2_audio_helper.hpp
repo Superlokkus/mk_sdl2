@@ -3,7 +3,6 @@
 
 #include <memory>
 
-
 namespace mk {
 
 class sdl2_audio_helper final {

@@ -2,6 +2,7 @@
 
 #include "sdl2_opengl_helper.hpp"
 #include "sdl2_helpers.hpp"
+#include "sdl2_audio_helper.hpp"
 
 #include <cstdlib>
 
@@ -10,6 +11,7 @@ int main() {
     try {
         mk::sdl2_opengl_helper sdl_opengl_helper{3, 3};
         mk::sdl2_event_helper event_helper{};
+        mk::sdl2_audio_helper audio_helper{};
         mk::sdl2_cout cout{};
 
         event_helper.replace_event_handler(std::bind(&mk::sdl2_opengl_helper::redraw, std::ref(sdl_opengl_helper)));
