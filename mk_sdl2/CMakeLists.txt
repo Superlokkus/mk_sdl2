@@ -14,6 +14,7 @@ set(${PROJECT_NAME}_implementation_files
         src/sdl2_opengl_helper.cpp
         src/sdl2_audio_helper.cpp
         src/sdl2_vulcan_helper.cpp
+        src/sdl2_2d_render_helper.cpp
         )
 
 
