@@ -48,6 +48,13 @@ sdl2_2d_render_helper::draw_pixel(const sdl2_2d_render_helper::pixel_color_t &co
     }
 }
 
+void sdl2_2d_render_helper::present_frame() {
+    SDL_RenderPresent(this->pimpl->renderer);
+    if (SDL_RenderClear(this->pimpl->renderer) != 0)  [[unlikely]] {
+        throw sdl2_error("Unable to SDL_RenderClear");
+    }
+}
+
 sdl2_2d_render_helper::~sdl2_2d_render_helper() {
     SDL_DestroyRenderer(this->pimpl->renderer);
     SDL_DestroyWindow(this->pimpl->window);

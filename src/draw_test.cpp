@@ -7,12 +7,13 @@ int main() {
         mk::sdl2_event_helper event_helper{};
         mk::sdl2_2d_render_helper render_helper{{160, 144, 4, 4}};
         for (int i{}, j{}; j < 100; ++i) {
-            render_helper.draw_pixel({255, 0, 255}, i, j);
+            render_helper.draw_pixel({std::uint8_t(i * 2), std::uint8_t(255u - i * 2u), 255}, i, j);
             if (i > 100) {
                 i = -1;
                 ++j;
             }
         }
+        render_helper.present_frame();
 
 
         mk::sdl2_cout cout{};

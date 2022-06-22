@@ -24,6 +24,8 @@ public:
 
     void draw_pixel(const pixel_color_t &, const std::uint32_t &x, const std::uint32_t &y);
 
+    void present_frame();
+
     sdl2_2d_render_helper(window_options_t);
 
     ~sdl2_2d_render_helper();
