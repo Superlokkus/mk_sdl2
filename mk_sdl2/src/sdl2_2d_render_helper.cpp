@@ -15,9 +15,10 @@ struct sdl2_2d_render_helper::impl {
     const Uint32 sdl_init_flags = SDL_INIT_VIDEO;
 };
 
-sdl2_2d_render_helper::sdl2_2d_render_helper(window_options_t window_options
+sdl2_2d_render_helper::sdl2_2d_render_helper(window_options_t window_opt
 ) : pimpl(std::make_unique<impl>(impl{
-        .window_options{std::move(window_options)}})) {
+        .window_options{std::move(window_opt)}})) {
+    const window_options_t &window_options = this->pimpl->window_options;
     if (!SDL_WasInit(this->pimpl->sdl_init_flags)) {
         if (SDL_InitSubSystem(this->pimpl->sdl_init_flags) != 0)
             throw sdl2_error("Unable to initialize sub system of SDL");
@@ -32,6 +33,9 @@ sdl2_2d_render_helper::sdl2_2d_render_helper(window_options_t window_options
         if (SDL_RenderSetLogicalSize(this->pimpl->renderer, window_options.width,
                                      window_options.height) != 0)
             throw sdl2_error("Unable Scale Renderer");
+    }
+    if (window_options.window_title) {
+        SDL_SetWindowTitle(this->pimpl->window, window_options.window_title->c_str());
     }
 
 }

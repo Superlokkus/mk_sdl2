@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <optional>
+#include <string>
 
 namespace mk {
 
@@ -13,6 +14,7 @@ public:
         std::uint32_t height{600};
         std::optional<float> scale_x;
         std::optional<float> scale_y;
+        std::optional<std::string> window_title;
     };
 
     struct pixel_color_t {
