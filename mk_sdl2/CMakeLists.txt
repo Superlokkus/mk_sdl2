@@ -6,7 +6,7 @@ find_package(SDL2 REQUIRED)
 string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER_CASE)
 configure_file(
         ${PROJECT_NAME}_version.hpp.in
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_version.hpp
+        include/${PROJECT_NAME}/${PROJECT_NAME}_version.hpp
 )
 
 set(${PROJECT_NAME}_implementation_files
